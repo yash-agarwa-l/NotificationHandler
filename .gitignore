@@ -70,3 +70,4 @@ node_modules/
 
 venv
 __pycache__
+servicekey.json
