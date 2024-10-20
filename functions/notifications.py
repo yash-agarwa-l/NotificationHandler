@@ -4,13 +4,14 @@ from notification_helpers import send_general_notification, send_event_notificat
 
 
 def send_general_notifications(req: https_fn.Request) -> https_fn.Response:
-    db = firestore.client() 
+    db = firestore.client()
     try:
         request_json = req.get_json()
         
         if request_json and 'title' in request_json and 'description' in request_json:
             title = request_json['title']
             description = request_json['description']
+            image_url = request_json.get('image_url')  # Optional parameter
         else:
             return https_fn.Response("Missing title or description in the request body", status=400)
 
@@ -22,7 +23,7 @@ def send_general_notifications(req: https_fn.Request) -> https_fn.Response:
             user_token = user_data.get('fcmId', '')
 
             if user_token:
-                send_general_notification(title, description, user_token)
+                send_general_notification(title, description, user_token, image_url)
                 notification_count += 1
 
         return https_fn.Response(f"Notifications sent to {notification_count} users", status=200)
@@ -30,6 +31,7 @@ def send_general_notifications(req: https_fn.Request) -> https_fn.Response:
     except Exception as e:
         print(f"Error: {str(e)}")
         return https_fn.Response(f"Error occurred: {str(e)}", status=500)
+
 
 def send_event_specific_notifications(req: https_fn.Request) -> https_fn.Response:
     db = firestore.client() 

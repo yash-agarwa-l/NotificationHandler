@@ -1,10 +1,11 @@
 from firebase_admin import messaging
 
-def send_general_notification(title, desc, token):
+def send_general_notification(title, desc, token,image=None):
     message = messaging.Message(
         notification=messaging.Notification(
             title=f"{title}",
             body=f"{desc}",
+            image=f"{image}"
         ),
         token=token,
     )
@@ -15,6 +16,7 @@ def send_general_notification(title, desc, token):
     except Exception as e:
         print('Error sending message:', str(e))
         return False
+    
 
 def send_event_notification(event_title, event_description, user_name, token):
     message = messaging.Message(
