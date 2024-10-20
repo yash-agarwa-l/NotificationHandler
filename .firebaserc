@@ -1,9 +1,12 @@
 {
   "projects": {
-    "default": "sat-app-b9f71",
-    "deployment": "sat-app-b9f71"
+    "default": "sat-test-ea7a8"
   },
   "targets": {},
   "etags": {},
   "dataconnectEmulatorConfig": {}
 }
+
+
+  
+

@@ -21,7 +21,7 @@ def send_general_notification(title, desc, token,image=None):
 def send_event_notification(event_title, event_description, user_name, token, image_url=None):
     message = messaging.Message(
         notification=messaging.Notification(
-            title=f"Event Update: {event_title}",
+            title=f"{event_title}",
             body=f"Hi {user_name}, {event_description}",
             image=image_url 
         ),
