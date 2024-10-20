@@ -4,7 +4,7 @@ from datetime import datetime, timezone, timedelta
 from notification_helpers import send_event_notification
 
 def check_events_and_notify(req: https_fn.Request) -> https_fn.Response:
-    db = firestore.client()  # Get the Firestore client
+    db = firestore.client() 
     try:
         events_ref = db.collection('events')
         now = datetime.now(timezone.utc)

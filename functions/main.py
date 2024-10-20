@@ -7,18 +7,31 @@ cred = credentials.Certificate("serviceKey.json")
 
 initialize_app(cred)
 
-# Initialize Firestore client
 db = firestore.client()
 
-# Define HTTP functions using decorators
+# to send notification to all users.
+# body:{
+    # "title":"Mirage",
+    # "description":"desc"
+# }
 @https_fn.on_request()
 def http_send_general_notifications(req: https_fn.Request) -> https_fn.Response:
     return send_general_notifications(req)
 
+
+# takes event id, and send notification to all users with that id in registerd events.
+# POST /send_event_specific_notifications
+# Content-Type: application/json
+# {
+#   "eventId": "abc123",
+    # "title":"Mirage",
+    # "description":"desc"
+# }
 @https_fn.on_request()
 def http_send_event_specific_notifications(req: https_fn.Request) -> https_fn.Response:
     return send_event_specific_notifications(req)
 
+# 
 @https_fn.on_request()
 def http_check_events_and_notify(req: https_fn.Request) -> https_fn.Response:
     return check_events_and_notify(req)

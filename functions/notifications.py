@@ -2,9 +2,9 @@ from firebase_functions import https_fn
 from firebase_admin import firestore
 from notification_helpers import send_general_notification, send_event_notification
 
-# We'll pass the db instance from main.py to these functions
+
 def send_general_notifications(req: https_fn.Request) -> https_fn.Response:
-    db = firestore.client()  # Get the Firestore client
+    db = firestore.client() 
     try:
         request_json = req.get_json()
         
@@ -32,7 +32,7 @@ def send_general_notifications(req: https_fn.Request) -> https_fn.Response:
         return https_fn.Response(f"Error occurred: {str(e)}", status=500)
 
 def send_event_specific_notifications(req: https_fn.Request) -> https_fn.Response:
-    db = firestore.client()  # Get the Firestore client
+    db = firestore.client() 
     try:
         request_json = req.get_json()
         
