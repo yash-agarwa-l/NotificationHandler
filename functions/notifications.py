@@ -11,7 +11,7 @@ def send_general_notifications(req: https_fn.Request) -> https_fn.Response:
         if request_json and 'title' in request_json and 'description' in request_json:
             title = request_json['title']
             description = request_json['description']
-            image_url = request_json.get('image_url')  # Optional parameter
+            image_url = request_json.get('image_url') 
         else:
             return https_fn.Response("Missing title or description in the request body", status=400)
 
@@ -34,17 +34,27 @@ def send_general_notifications(req: https_fn.Request) -> https_fn.Response:
 
 
 def send_event_specific_notifications(req: https_fn.Request) -> https_fn.Response:
-    db = firestore.client() 
+    db = firestore.client()
     try:
         request_json = req.get_json()
         
-        if request_json and 'eventId' in request_json and 'title' in request_json and 'description' in request_json:
+        if request_json and 'eventId' and 'title' and 'description' in request_json:
             event_id = request_json['eventId']
-            event_title = request_json['title']
-            event_description = request_json['description']
+            event_title = request_json.get('title')
+            event_description = request_json.get('description')
+            image_url = request_json.get('image_url')
         else:
-            return https_fn.Response("Missing eventId, title, or description in the request body", status=400)
+            return https_fn.Response("Missing eventId in the request body", status=400)
 
+        # Fetch imageurl if not provideed.
+        if not image_url:
+            event_doc = db.collection('event').document('sat24').collection('events').document(event_id).get()
+            if event_doc.exists:
+                event_data = event_doc.to_dict()
+                image_url = image_url or event_data.get('imageUrl')
+            else:
+                return https_fn.Response(f"Event with ID {event_id} not found", status=404)
+            
         users_ref = db.collection('users').get()
         notification_count = 0
 
@@ -55,7 +65,7 @@ def send_event_specific_notifications(req: https_fn.Request) -> https_fn.Respons
             user_event_ids = user_data.get('eventUniqueIds', [])
 
             if user_token and event_id in user_event_ids:
-                success = send_event_notification(event_title, event_description, user_name, user_token)
+                success = send_event_notification(event_title, event_description, user_name, user_token, image_url)
                 if success:
                     notification_count += 1
 
@@ -64,3 +74,4 @@ def send_event_specific_notifications(req: https_fn.Request) -> https_fn.Respons
     except Exception as e:
         print(f"Error: {str(e)}")
         return https_fn.Response(f"Error occurred: {str(e)}", status=500)
+
