@@ -1,0 +1,60 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // match /locations/{docId} {
+    //   allow read, write: if validateLocation(request.resource.data);
+    // // }
+    // match /app/versions {
+    //   allow read: if true;
+    //   allow write: if false; // Disallow write operations completely
+    //   allow create: if false; // Disallow create operations
+    //   allow update: if false; // Disallow update operations
+    //   allow delete: if false; // Disallow delete operations
+    // }
+    // match /app/maintainence {
+    //   allow read: if true;
+    //   allow write: if false; // Disallow write operations completely
+    //   allow create: if false; // Disallow create operations
+    //   allow update: if false; // Disallow update operations
+    //   allow delete: if false; // Disallow delete operations
+    // }
+    // match /users/{userId} {
+    //   allow read : if true;
+    //   allow write: if validateUser(request.resource.data);
+    // }
+    match /{document=**} {
+      allow read:  if true;
+      allow write: if true; 
+    }
+  }
+}
+
+function validateUser(data) {
+  return data.userId is string &&
+         data.userName is string &&
+         data.email is string &&
+         data.profilePicUrl is string &&
+         data.graduationYear is string &&
+         data.gender is number &&
+         data.collegeName is string &&
+         data.collegeCity is string &&
+         data.collegeState is string &&
+         data.branch is string &&
+         data.coins is number &&
+         data.collegePinCode is number &&
+         data.referalCode is string &&
+         data.uniqueId is string &&
+         data.phoneNumber is number &&
+         (data.rollNumber == null || data.rollNumber is number) &&
+         
+         data.roleId is number &&
+         (data.events == null || (data.events is list && data.events.size() >= 0));
+}
+function validateLocation(data) {
+  return data.geoPoints is map &&
+         data.geoPoints.latitude is number &&
+         data.geoPoints.longitude is number &&
+         data.id is number &&
+         data.venue is string;
+}

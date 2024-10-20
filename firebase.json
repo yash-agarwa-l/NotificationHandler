@@ -25,8 +25,9 @@
     "ui": {
       "enabled": true
     }
+  },
+  "firestore": {
+    "rules": "y",
+    "indexes": "y"
   }
 }
-
-
-

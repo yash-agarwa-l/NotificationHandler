@@ -1,9 +1,11 @@
 from firebase_functions import https_fn
-from firebase_admin import initialize_app, firestore, messaging
+from firebase_admin import initialize_app, credentials,firestore, messaging
 from datetime import datetime, timezone, timedelta
 
-# Initialize Firebase app
-initialize_app()
+cred = credentials.Certificate("serviceKey.json")
+
+initialize_app(cred)
+
 db = firestore.client()
 
 def send_notification(event_title, user_name, token):
@@ -16,7 +18,7 @@ def send_notification(event_title, user_name, token):
     )
     try:
         response = messaging.send(message)
-        print('Successfully sent message:', response)
+        print(f'Successfully sent ${event_title}  message: {user_name}', response)
     except Exception as e:
         print('Error sending message:', str(e))
 
@@ -38,7 +40,6 @@ def check_events_and_notify(req: https_fn.Request) -> https_fn.Response:
             if not event_start_time:
                 print(f"Event {event_title} has no start time, skipping.")
                 continue
-
             # Convert the event time to UTC
             event_start_time = event_start_time.astimezone(timezone.utc)
             notify_time = event_start_time - timedelta(minutes=5)
