@@ -1,11 +1,13 @@
+import sys
+sys.path.append('./')
 from firebase_functions import https_fn
 from firebase_admin import initialize_app, credentials, firestore
-from notifications import send_general_notifications, send_event_specific_notifications
-from event_checker import check_events_and_notify
+# from notifications import send_general_notifications, send_event_specific_notifications
+# from event_checker import check_events_and_notify
 
-# cred = credentials.Certificate("serviceKey.json")
+cred = credentials.Certificate("serviceKey.json")
 
-initialize_app()
+initialize_app(cred)
 
 db = firestore.client()
 

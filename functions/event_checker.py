@@ -6,7 +6,7 @@ from notification_helpers import send_event_notification
 def check_events_and_notify(req: https_fn.Request) -> https_fn.Response:
     db = firestore.client() 
     try:
-        events_ref = db.collection('events')
+        events_ref = db.collection('event').document('sat24').collection('events')
         now = datetime.now(timezone.utc)
         
         events = events_ref.get()
